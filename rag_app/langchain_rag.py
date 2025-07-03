@@ -6,7 +6,7 @@ from langchain.chains import RetrievalQA
 
 class RAGEngine:
     def __init__(self):
-        self.embeddings = HuggingFaceEmbeddings(model_name="nomic-ai/nomic-embed-text-v1.5", model_kwargs={"trust_remote_code": True})
+        self.embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
         self.vectordb = Chroma(embedding_function=self.embeddings, persist_directory="./chroma_db")
         self.text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
         self.llm = Ollama(model="mistral:latest", temperature=0.1)
