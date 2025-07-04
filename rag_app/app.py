@@ -37,10 +37,8 @@ if st.session_state.uploaded_docs:
             rag.remove_doc(doc_id)
             st.experimental_rerun()
 
-# Ask a question input
 query = st.text_input("#### Ask a question:")
 
-# If user enters a question
 if query:
     st.markdown("<a name='answer'></a>", unsafe_allow_html=True)
     st.markdown("### 🧠 Answer")
@@ -50,7 +48,6 @@ if query:
         else:
             answer = rag.ask(query, no_context=True)
 
-    # Typing effect
     output_box = st.empty()
     typed = ""
     for word in answer.split():
@@ -58,7 +55,6 @@ if query:
         output_box.markdown(typed)
         time.sleep(0.05)
 
-    # Auto-scroll to answer
     components.html("""
         <script>
             const el = document.getElementsByName("answer")[0];
