@@ -9,7 +9,7 @@ class RAGEngine:
         self.embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
         self.vectordb = None
         self.text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
-        self.llm = Ollama(model="mistral", temperature=0.2)
+        self.llm = Ollama(model="mistral", base_url="http://localhost:11434", temperature=0.2)
         self.qa_chain = None
         self.loaded_docs = {}
 
