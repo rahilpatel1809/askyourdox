@@ -1,7 +1,8 @@
+import os
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.llms import Ollama
+from langchain_groq import ChatGroq
 from langchain.chains import RetrievalQA
 
 class RAGEngine:
@@ -9,12 +10,14 @@ class RAGEngine:
         self.embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
         self.vectordb = None
         self.text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
-        self.llm = Ollama(model="mistral", base_url="http://localhost:11434", temperature=0.2)
+        
+        self.llm = ChatGroq(model_name="llama-3.1-8b-instant", temperature=0.1)
+        
         self.qa_chain = None
         self.loaded_docs = {}
 
     def load_doc(self, text, doc_id):
-        docs = self.text_splitter.create_documents([text], metadatas=[{"doc_id": doc_id}] * len(text))
+        docs = self.text_splitter.create_documents([text], metadatas=[{"doc_id": doc_id}])
         if self.vectordb is None:
             self.vectordb = FAISS.from_documents(docs, self.embeddings)
         else:
@@ -27,7 +30,7 @@ class RAGEngine:
             remaining_docs = []
             for other_id, text in self.loaded_docs.items():
                 if other_id != doc_id:
-                    docs = self.text_splitter.create_documents([text], metadatas=[{"doc_id": other_id}] * len(text))
+                    docs = self.text_splitter.create_documents([text], metadatas=[{"doc_id": other_id}])
                     remaining_docs.extend(docs)
             if remaining_docs:
                 self.vectordb = FAISS.from_documents(remaining_docs, self.embeddings)
@@ -45,5 +48,5 @@ class RAGEngine:
 
     def ask(self, question, no_context=False):
         if no_context or not self.qa_chain:
-            return self.llm.invoke(question)
+            return self.llm.invoke(question).content
         return self.qa_chain.run(question)

@@ -1,9 +1,12 @@
+import os
 import streamlit as st
 from utils import extract_text
 from langchain_rag import RAGEngine
 from io import BytesIO
 import streamlit.components.v1 as components
 import time
+
+os.environ["GROQ_API_KEY"] = st.secrets["groq_api_key"]
 
 st.set_page_config(page_title="AskYourDox", layout="wide")
 st.title("AskYourDox📄")
@@ -14,7 +17,7 @@ if "uploaded_docs" not in st.session_state:
     st.session_state.uploaded_docs = {}
 
 files = st.file_uploader(
-    "Upload PDF, DOCX, TXT, or Image",
+    "Upload Your Documents",
     type=["pdf", "docx", "txt", "jpg", "jpeg", "png"],
     accept_multiple_files=True
 )
@@ -37,7 +40,7 @@ if st.session_state.uploaded_docs:
             rag.remove_doc(doc_id)
             st.experimental_rerun()
 
-query = st.text_input("#### Ask a question:")
+query = st.text_input("#### Ask a Question:")
 
 if query:
     st.markdown("<a name='answer'></a>", unsafe_allow_html=True)
