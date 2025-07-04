@@ -1,5 +1,6 @@
 streamlit
 groq
+langchain_groq
 langchain
 langchain-community
 faiss-cpu
