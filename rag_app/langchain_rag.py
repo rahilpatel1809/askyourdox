@@ -9,7 +9,7 @@ class RAGEngine:
         self.embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
         self.vectordb = Chroma(embedding_function=self.embeddings, persist_directory="./chroma_db")
         self.text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
-        self.llm = Ollama(model="mistral:latest", temperature=0.1)
+        self.llm = Ollama(model="mistral", temperature=0.2)
         self.qa_chain = None
         self.loaded_docs = {}
 
