@@ -5,27 +5,32 @@ from PIL import Image
 from docx import Document
 import tempfile
 
-# Initialize EasyOCR reader (fallbacks to CPU if GPU unavailable)
 reader = easyocr.Reader(['en'], gpu=True)
 
 def extract_from_pdf(file):
-    file_bytes = file.read()
-    text = ""
+    try:
+        file_bytes = file.read()
+        text = ""
 
-    with fitz.open(stream=file_bytes, filetype="pdf") as doc:
-        for page in doc:
-            page_text = page.get_text()
-            if page_text.strip():
-                text += page_text + "\n"
-            else:
-                # If no text, fallback to OCR via pixmap
-                pix = page.get_pixmap(dpi=200)
-                img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
-                img_np = np.array(img)
-                results = reader.readtext(img_np, detail=0)
-                text += " ".join(results) + "\n"
+        with fitz.open(stream=file_bytes, filetype="pdf") as doc:
+            for page in doc:
+                page_text = page.get_text()
+                if page_text.strip():
+                    text += page_text + "\n"
+                else:
+                    try:
+                        pix = page.get_pixmap(dpi=200)
+                        img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
+                        img_np = np.array(img)
+                        results = reader.readtext(img_np, detail=0)
+                        text += " ".join(results) + "\n"
+                    except Exception as ocr_err:
+                        text += f"[OCR failed on page {page.number + 1}] "
 
-    return text or "No readable text found in PDF."
+        return text or "No readable text found in PDF."
+
+    except Exception as e:
+        return f"Error reading PDF: {str(e)}"
 
 def ocr_image(file):
     image = Image.open(file)

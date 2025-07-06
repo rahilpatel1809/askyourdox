@@ -30,7 +30,8 @@ if "trigger_ask" not in st.session_state:
 def get_rag():
     return RAGEngine()
 
-rag = get_rag()
+with st.spinner("Initializing AskYourDox..."):
+    rag = get_rag()
 
 files = st.file_uploader(
     "Upload Your Documents",
