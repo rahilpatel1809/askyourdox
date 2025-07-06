@@ -24,14 +24,8 @@ def extract_from_pdf(file):
                     page_text = page.get_text()
                     if page_text.strip():
                         text += page_text + "\n"
-                    else:
-                        pix = page.get_pixmap(dpi=200)
-                        img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
-                        img_np = np.array(img)
-                        results = reader.readtext(img_np, detail=0)
-                        text += " ".join(results) + "\n"
                 except Exception as page_err:
-                    text += f"\n[Error reading page {page.number + 1}] "
+                    text += f"\n[Error reading page {page.number + 1}] {str(page_err)}"
 
             return text.strip() or "No readable text found in PDF."
 
