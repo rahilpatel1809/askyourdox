@@ -1,6 +1,6 @@
 # [AskYourDox](https://askyourdox.streamlit.app)
 
-*AskYourDox* is an open-source web app that allows users to upload documents (PDF, DOCX, TXT, images) and ask questions based on their content. It uses a Retrieval-Augmented Generation (RAG) pipeline powered by Groq's fast inference with Llama-3.1-8b.
+*AskYourDox* is a Streamlit web app that allows users to upload documents (PDF, DOCX, TXT, images) and ask questions based on their content. It uses a Retrieval-Augmented Generation (RAG) pipeline powered by Groq's fast inference with Llama-3.1-8b.
 
 ## Live Demo
 [askyourdox.streamlit.app](https://askyourdox.streamlit.app)
